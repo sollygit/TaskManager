@@ -6,20 +6,26 @@
 
 <h2>Todo List</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-
 <form asp-controller="Todos" asp-action="Index" method="get">
-    <div class="input-group">
-        <span class="input-group-btn" style="width:0;">
-            @Html.DropDownListFor(x => x.TagId, new SelectList(Model.TagList, "Id", "Name"), "-- All Tags --", new { @class= "form-control" })
-        </span>
-        <span class="input-group-btn" style="width:10px;"></span>
-        <input type="text" name="searchString" placeholder="Search items" class="form-control" />
-        <span class="input-group-btn" style="width:0;">
-            <input type="submit" value="Search" class="btn btn-default"/>
-        </span>
+    <div class="form-group row">
+        <div class="col-md-2">
+            <a asp-action="Create">Create New</a>
+        </div>
+        <div class="col-md-2">
+            <div class="input-group">
+                <span class="input-group-addon"></span>
+                @Html.DropDownListFor(x => x.TagId, new SelectList(Model.TagList, "Id", "Name"), "-- All Tags --", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="input-group">
+                <span class="input-group-addon"></span>
+                <input type="text" name="searchString" placeholder="Search items" class="form-control" />
+            </div>
+        </div>
+        <div class="col-md-6">
+            <input type="submit" value="Search" class="btn btn-success" />
+        </div>
     </div>
 </form>
 
