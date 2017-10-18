@@ -12,6 +12,21 @@
     <a asp-action="Create">Create New</a>
 </p>
 
+<form asp-controller="Todos" asp-action="Index" method="get">
+    <div class="input-group">
+        <input type="text" name="searchString" placeholder="Search items" class="form-control" />
+        <span class="input-group-btn" style="width:0;">
+            <input type="submit" value="Search" class="btn btn-default" />
+        </span>
+        <span class="input-group-addon">Tag</span>
+        <span class="input-group-btn" style="width:0;">
+            <select class="form-control">
+                <option value="">All</option>
+            </select>
+        </span>
+    </div>
+</form>
+
 <table class="table">
     <thead>
         <tr>

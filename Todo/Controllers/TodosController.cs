@@ -24,12 +24,17 @@ namespace Todo.Controllers
         }
 
         // GET: Todos
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            var todos = from c in _context.Todo select c;
+            var todos = from t in _context.Todo select t;
             var currentUserId = _userManager.GetUserId(User);
 
             todos = todos.Where(c => c.OwnerID == currentUserId);
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                todos = todos.Where(t => t.Title.Contains(searchString));
+            }
 
             return View(await todos.ToListAsync());
         }
