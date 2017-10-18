@@ -74,12 +74,20 @@ namespace Todo.Data
 
         public void SeedDB(string userId)
         {
-            if (_ctx.Todo.Any())
+            if (_ctx.TodoList.Any())
             {
                 return;  // DB has been seeded
             }
 
-            _ctx.Todo.AddRange(
+            _ctx.TagList.AddRange(
+                new Tag { Name = "Personal" },
+                new Tag { Name = "Business" },
+                new Tag { Name = "Social" },
+                new Tag { Name = "Fun" },
+                new Tag { Name = "Code" }
+            );
+
+            _ctx.TodoList.AddRange(
                 new Models.Todo
                 {
                     Title = "Gym Time!",
@@ -87,7 +95,7 @@ namespace Todo.Data
                     Status = TodoStatus.New,
                     OwnerID = userId,
                     StartDate = DateTime.Now,
-                    Tag = TodoTags.Personal.ToString()
+                    TagId = 1,
                 },
              new Models.Todo
              {
@@ -96,7 +104,7 @@ namespace Todo.Data
                  Status = TodoStatus.New,
                  OwnerID = userId,
                  StartDate = DateTime.Now,
-                 Tag = TodoTags.Business.ToString()
+                 TagId = 2,
              },
              new Models.Todo
              {
@@ -105,7 +113,7 @@ namespace Todo.Data
                  Status = TodoStatus.New,
                  OwnerID = userId,
                  StartDate = DateTime.Now,
-                 Tag = TodoTags.Business.ToString()
+                 TagId = 2,
              },
              new Models.Todo
              {
@@ -114,7 +122,7 @@ namespace Todo.Data
                  Status = TodoStatus.New,
                  OwnerID = userId,
                  StartDate = DateTime.Now,
-                 Tag = TodoTags.Social.ToString()
+                 TagId = 3,
              },
             new Models.Todo
             {
@@ -123,7 +131,7 @@ namespace Todo.Data
                 Status = TodoStatus.New,
                 OwnerID = userId,
                 StartDate = DateTime.Now,
-                Tag = TodoTags.Fun.ToString()
+                TagId = 4,
             });
 
             _ctx.SaveChanges();

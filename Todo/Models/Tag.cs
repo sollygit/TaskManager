@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
 
 namespace Todo.Models
 {
@@ -6,7 +6,7 @@ namespace Todo.Models
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Tag is required")]
+        [DisplayName("Tag")]
         public string Name { get; set; }
     }
 }

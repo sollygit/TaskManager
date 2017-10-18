@@ -27,14 +27,9 @@ namespace Todo.Controllers
         }
 
         // GET: Todos
-        public async Task<IActionResult> Index(string tag, string searchString)
+        public async Task<IActionResult> Index(int tagId, string searchString)
         {
-            // Get a list of tags.
-            IQueryable<string> tagQuery = from m in _context.Todo
-                                            orderby m.Tag
-                                            select m.Tag;
-
-            var todos = from t in _context.Todo select t;
+            var todos = from t in _context.TodoList select t;
             var currentUserId = _userManager.GetUserId(User);
 
             todos = todos.Where(c => c.OwnerID == currentUserId);
@@ -44,15 +39,17 @@ namespace Todo.Controllers
                 todos = todos.Where(t => t.Title.Contains(searchString));
             }
 
-            if (!String.IsNullOrEmpty(tag))
+            if (tagId != 0)
             {
-                todos = todos.Where(x => x.Tag == tag);
+                todos = todos.Where(x => x.TagId == tagId);
             }
+
+            var tagList = _context.TagList.ToList();
 
             var todoTagVM = new TodoTagViewModel
             {
-                tags = new SelectList(await tagQuery.Distinct().ToListAsync()),
-                todos = await todos.ToListAsync()
+                TagList = tagList,
+                TodoList = await todos.ToListAsync()
             };
 
             return View(todoTagVM);
@@ -66,7 +63,7 @@ namespace Todo.Controllers
                 return NotFound();
             }
 
-            var todo = await _context.Todo.SingleOrDefaultAsync(m => m.Id == id);
+            var todo = await _context.TodoList.SingleOrDefaultAsync(m => m.Id == id);
             if (todo == null)
             {
                 return NotFound();
@@ -88,11 +85,9 @@ namespace Todo.Controllers
         // GET: Todos/Create
         public IActionResult Create()
         {
-            var todoTags = new EnumHelper().MapEnumToDictionary<TodoTags>().Select(o => o.Value);
-
             var todoEditVM = new TodoEditViewModel
             {
-                TagList = new SelectList(todoTags)
+                TagList = _context.TagList
             };
 
             return View(todoEditVM);
@@ -112,13 +107,6 @@ namespace Todo.Controllers
 
             todo.OwnerID = _userManager.GetUserId(User);
 
-            var isAuthorized = await _authorizationService.AuthorizeAsync(User, todo, TodoOperations.Create);
-
-            if (!isAuthorized.Succeeded)
-            {
-                return new ChallengeResult();
-            }
-
             _context.Add(todo);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
@@ -132,7 +120,7 @@ namespace Todo.Controllers
                 return NotFound();
             }
 
-            var todo = await _context.Todo.SingleOrDefaultAsync(m => m.Id == id);
+            var todo = await _context.TodoList.SingleOrDefaultAsync(m => m.Id == id);
             if (todo == null)
             {
                 return NotFound();
@@ -154,7 +142,7 @@ namespace Todo.Controllers
             }
 
             // Fetch Contact from DB to get OwnerID.
-            var todo = await _context.Todo.SingleOrDefaultAsync(m => m.Id == id);
+            var todo = await _context.TodoList.SingleOrDefaultAsync(m => m.Id == id);
             if (todo == null)
             {
                 return NotFound();
@@ -176,7 +164,7 @@ namespace Todo.Controllers
                 return NotFound();
             }
 
-            var todo = await _context.Todo.SingleOrDefaultAsync(m => m.Id == id);
+            var todo = await _context.TodoList.SingleOrDefaultAsync(m => m.Id == id);
             if (todo == null)
             {
                 return NotFound();
@@ -196,7 +184,7 @@ namespace Todo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var todo = await _context.Todo.SingleOrDefaultAsync(m => m.Id == id);
+            var todo = await _context.TodoList.SingleOrDefaultAsync(m => m.Id == id);
 
             var isAuthorized = await _authorizationService.AuthorizeAsync(User, todo, TodoOperations.Delete);
             if (!isAuthorized.Succeeded)
@@ -204,7 +192,7 @@ namespace Todo.Controllers
                 return new ChallengeResult();
             }
 
-            _context.Todo.Remove(todo);
+            _context.TodoList.Remove(todo);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
@@ -213,10 +201,10 @@ namespace Todo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SetStatus(int id, TodoStatus status)
         {
-            var todo = await _context.Todo.SingleOrDefaultAsync(m => m.Id == id);
+            var todo = await _context.TodoList.SingleOrDefaultAsync(m => m.Id == id);
 
             todo.Status = status;
-            _context.Todo.Update(todo);
+            _context.TodoList.Update(todo);
 
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
@@ -224,34 +212,38 @@ namespace Todo.Controllers
 
         private bool TodoExists(int id)
         {
-            return _context.Todo.Any(e => e.Id == id);
+            return _context.TodoList.Any(e => e.Id == id);
         }
 
         private Models.Todo ViewModel_to_model(Models.Todo todo, TodoEditViewModel editModel)
         {
             todo.Id = editModel.Id;
             todo.Title = editModel.Title;
-            todo.Tag = editModel.Tag;
+            todo.TagId = editModel.TagId;
             todo.Description = editModel.Description;
+            todo.StartDate = editModel.Date;
 
             return todo;
         }
 
         private TodoEditViewModel Model_to_viewModelAsync(Models.Todo todo)
         {
-            // Get a list of tag names.
-            var todoTags = new EnumHelper().MapEnumToDictionary<TodoTags>().Select(o => o.Value);
-
             var editModel = new TodoEditViewModel
             {
                 Id = todo.Id,
                 Title = todo.Title,
-                Tag = todo.Tag,
+                TagId = todo.TagId,
                 Description = todo.Description,
-                TagList = new SelectList(todoTags)
+                Date = todo.StartDate,
+                TagList = _context.TagList
             };
 
             return editModel;
+        }
+
+        public string GetTagName(int id)
+        {
+            return _context.TagList.Where(t => t.Id == id).FirstOrDefault().Name;
         }
     }
 }

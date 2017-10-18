@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Todo.Models
@@ -10,11 +12,14 @@ namespace Todo.Models
         [Required(ErrorMessage = "Title is required")]
         public string Title { get; set; }
 
-        public string Description { get; set; }
-
         [Required(ErrorMessage = "Tag is required")]
-        public string Tag { get; set; }
+        [DisplayName("Tag")]
+        public int TagId { get; set; }
 
-        public SelectList TagList { get; set; }
+        [Required(ErrorMessage = "Date is required")]
+        public DateTime Date { get; set; }
+
+        public string Description { get; set; }
+        public IEnumerable<Tag> TagList { get; set; }
     }
 }

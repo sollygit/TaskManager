@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Todo.Models
 {
@@ -8,8 +10,14 @@ namespace Todo.Models
         public string OwnerID { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public string Tag { get; set; }
+
+        [DisplayName("Tag")]
+        public int TagId { get; set; }
+
         public TodoStatus Status { get; set; }
+
+        [DataType(DataType.DateTime)]
+        [DisplayName("Start Date")]
         public DateTime StartDate { get; set; }
     }
 
@@ -18,13 +26,5 @@ namespace Todo.Models
         New,
         InProgress,
         Done
-    }
-
-    public enum TodoTags
-    {
-        Business,
-        Personal,
-        Social,
-        Fun
     }
 }

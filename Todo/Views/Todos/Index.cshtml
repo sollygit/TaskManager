@@ -12,13 +12,11 @@
 
 <form asp-controller="Todos" asp-action="Index" method="get">
     <div class="input-group">
-        <span class="input-group-addon">Tag</span>
         <span class="input-group-btn" style="width:0;">
-            <select name="tag" asp-for="TodoTag" asp-items="Model.tags" class="form-control">
-                <option value="">- All -</option>
-            </select>
+            @Html.DropDownListFor(x => x.TagId, new SelectList(Model.TagList, "Id", "Name"), "-- All Tags --", new { @class= "form-control" })
         </span>
-        <input type="text" name="searchString" placeholder="Search items" class="form-control" style="margin-left:10px;" />
+        <span class="input-group-btn" style="width:10px;"></span>
+        <input type="text" name="searchString" placeholder="Search items" class="form-control" />
         <span class="input-group-btn" style="width:0;">
             <input type="submit" value="Search" class="btn btn-default"/>
         </span>
@@ -29,32 +27,38 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.todos[0].Title)
+                @Html.DisplayNameFor(model => model.TodoList.FirstOrDefault().Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.todos[0].Tag)
+                @Html.DisplayNameFor(model => model.TodoList.FirstOrDefault().TagId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.todos[0].Description)
+                @Html.DisplayNameFor(model => model.TodoList.FirstOrDefault().Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.todos[0].Status)
+                @Html.DisplayNameFor(model => model.TodoList.FirstOrDefault().StartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TodoList.FirstOrDefault().Status)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.todos)
+        @foreach (var item in Model.TodoList)
         {
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Title)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Tag)
+                    @Model.TagList.Where(t => t.Id == item.TagId).FirstOrDefault().Name
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Status)
