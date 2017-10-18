@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Todo.Models;
 using Microsoft.AspNetCore.Identity;
+using System;
 
 namespace Todo.Data
 {
@@ -81,25 +82,49 @@ namespace Todo.Data
             _ctx.Todo.AddRange(
                 new Models.Todo
                 {
-                    Title = "Gym Time",
-                    Description = "Hit the Gym",
+                    Title = "Gym Time!",
+                    Description = "Hit the Gym at least twice a week",
                     Status = TodoStatus.New,
-                    OwnerID = userId
+                    OwnerID = userId,
+                    StartDate = DateTime.Now,
+                    Tag = TodoTags.Personal.ToString()
                 },
              new Models.Todo
              {
-                 Title = "Read a Book",
-                 Description = "Read a Book Description",
+                 Title = "Get new business cards",
+                 Description = "By January get your new business cards",
                  Status = TodoStatus.New,
-                 OwnerID = userId
+                 OwnerID = userId,
+                 StartDate = DateTime.Now,
+                 Tag = TodoTags.Business.ToString()
              },
              new Models.Todo
              {
-                 Title = "Organize Office",
-                 Description = "Organize Office Description",
+                 Title = "Copyright information",
+                 Description = "Add copyright information to footer",
                  Status = TodoStatus.New,
-                 OwnerID = userId
-             });
+                 OwnerID = userId,
+                 StartDate = DateTime.Now,
+                 Tag = TodoTags.Business.ToString()
+             },
+             new Models.Todo
+             {
+                 Title = "Instagram",
+                 Description = "Create your Instagram landing page",
+                 Status = TodoStatus.New,
+                 OwnerID = userId,
+                 StartDate = DateTime.Now,
+                 Tag = TodoTags.Social.ToString()
+             },
+            new Models.Todo
+            {
+                Title = "Go to the Park",
+                Description = "Go to the Park. You can take your dog or a pink Armadillo",
+                Status = TodoStatus.New,
+                OwnerID = userId,
+                StartDate = DateTime.Now,
+                Tag = TodoTags.Fun.ToString()
+            });
 
             _ctx.SaveChanges();
         }

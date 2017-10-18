@@ -14,14 +14,23 @@
         <div class="form-group">
             <label asp-for="Title" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Title" placeholder="Todo Title" class="form-control" />
+                <input asp-for="Title" placeholder="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Tag" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select name="tag" asp-for="Tag" asp-items="Model.TagList" class="form-control">
+                    <option value="">- Please select a Tag -</option>
+                </select>
+                <span asp-validation-for="Tag" class="text-danger" />
             </div>
         </div>
         <div class="form-group">
             <label asp-for="Description" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Description" placeholder="Todo Description" class="form-control" />
+                <input asp-for="Description" placeholder="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger" />
             </div>
         </div>

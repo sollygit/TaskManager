@@ -1,6 +1,4 @@
-﻿@model IEnumerable<Todo>
-@using Todo.Authorization;
-
+﻿@model TodoTagViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -14,15 +12,15 @@
 
 <form asp-controller="Todos" asp-action="Index" method="get">
     <div class="input-group">
-        <input type="text" name="searchString" placeholder="Search items" class="form-control" />
-        <span class="input-group-btn" style="width:0;">
-            <input type="submit" value="Search" class="btn btn-default" />
-        </span>
         <span class="input-group-addon">Tag</span>
         <span class="input-group-btn" style="width:0;">
-            <select class="form-control">
-                <option value="">All</option>
+            <select name="tag" asp-for="TodoTag" asp-items="Model.tags" class="form-control">
+                <option value="">- All -</option>
             </select>
+        </span>
+        <input type="text" name="searchString" placeholder="Search items" class="form-control" style="margin-left:10px;" />
+        <span class="input-group-btn" style="width:0;">
+            <input type="submit" value="Search" class="btn btn-default"/>
         </span>
     </div>
 </form>
@@ -31,23 +29,29 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Title)
+                @Html.DisplayNameFor(model => model.todos[0].Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                @Html.DisplayNameFor(model => model.todos[0].Tag)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Status)
+                @Html.DisplayNameFor(model => model.todos[0].Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.todos[0].Status)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.todos)
         {
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Tag)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Description)
@@ -57,15 +61,10 @@
                 </td>
                 <td>
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                    @if ((await AuthorizationService.AuthorizeAsync(User, item, TodoOperations.Update)).Succeeded)
-                    {
-                        <text> | </text><a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                    }
-                    @if ((await AuthorizationService.AuthorizeAsync(User, item, TodoOperations.Delete)).Succeeded)
-                    {
-                        <text> | </text>
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                    }
+                    <text> | </text>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    <text> | </text>
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
             </tr>
         }

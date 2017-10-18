@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Todo.Services;
 
 namespace Todo.Controllers
 {
@@ -24,19 +27,35 @@ namespace Todo.Controllers
         }
 
         // GET: Todos
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index(string tag, string searchString)
         {
+            // Get a list of tags.
+            IQueryable<string> tagQuery = from m in _context.Todo
+                                            orderby m.Tag
+                                            select m.Tag;
+
             var todos = from t in _context.Todo select t;
             var currentUserId = _userManager.GetUserId(User);
 
             todos = todos.Where(c => c.OwnerID == currentUserId);
 
-            if (!string.IsNullOrEmpty(searchString))
+            if (!String.IsNullOrEmpty(searchString))
             {
                 todos = todos.Where(t => t.Title.Contains(searchString));
             }
 
-            return View(await todos.ToListAsync());
+            if (!String.IsNullOrEmpty(tag))
+            {
+                todos = todos.Where(x => x.Tag == tag);
+            }
+
+            var todoTagVM = new TodoTagViewModel
+            {
+                tags = new SelectList(await tagQuery.Distinct().ToListAsync()),
+                todos = await todos.ToListAsync()
+            };
+
+            return View(todoTagVM);
         }
 
         // GET: Todos/Details/5
@@ -69,7 +88,14 @@ namespace Todo.Controllers
         // GET: Todos/Create
         public IActionResult Create()
         {
-            return View();
+            var todoTags = new EnumHelper().MapEnumToDictionary<TodoTags>().Select(o => o.Value);
+
+            var todoEditVM = new TodoEditViewModel
+            {
+                TagList = new SelectList(todoTags)
+            };
+
+            return View(todoEditVM);
         }
 
         // POST: Todos/Create
@@ -112,13 +138,7 @@ namespace Todo.Controllers
                 return NotFound();
             }
 
-            var isAuthorized = await _authorizationService.AuthorizeAsync(User, todo, TodoOperations.Update);
-            if (!isAuthorized.Succeeded)
-            {
-                return new ChallengeResult();
-            }
-
-            var editModel = Model_to_viewModel(todo);
+            var editModel = Model_to_viewModelAsync(todo);
 
             return View(editModel);
         }
@@ -140,21 +160,7 @@ namespace Todo.Controllers
                 return NotFound();
             }
 
-            var isAuthorized = await _authorizationService.AuthorizeAsync(User, todo, TodoOperations.Update);
-            if (!isAuthorized.Succeeded)
-            {
-                return new ChallengeResult();
-            }
-
             todo = ViewModel_to_model(todo, editModel);
-
-            if (todo.Status == TodoStatus.InProgress)
-            {
-                // If the todo task is updated after approval and the user cannot approve set the status back to submitted
-                var canApprove = await _authorizationService.AuthorizeAsync(User, todo, TodoOperations.Start);
-
-                if (!canApprove.Succeeded) todo.Status = TodoStatus.New;
-            }
 
             _context.Update(todo);
             await _context.SaveChangesAsync();
@@ -209,14 +215,6 @@ namespace Todo.Controllers
         {
             var todo = await _context.Todo.SingleOrDefaultAsync(m => m.Id == id);
 
-            var contactOperation = (status == TodoStatus.InProgress) ? TodoOperations.Start : TodoOperations.Finish;
-
-            var isAuthorized = await _authorizationService.AuthorizeAsync(User, todo, contactOperation);
-            if (!isAuthorized.Succeeded)
-            {
-                return new ChallengeResult();
-            }
-
             todo.Status = status;
             _context.Todo.Update(todo);
 
@@ -233,18 +231,24 @@ namespace Todo.Controllers
         {
             todo.Id = editModel.Id;
             todo.Title = editModel.Title;
+            todo.Tag = editModel.Tag;
             todo.Description = editModel.Description;
 
             return todo;
         }
 
-        private TodoEditViewModel Model_to_viewModel(Models.Todo todo)
+        private TodoEditViewModel Model_to_viewModelAsync(Models.Todo todo)
         {
+            // Get a list of tag names.
+            var todoTags = new EnumHelper().MapEnumToDictionary<TodoTags>().Select(o => o.Value);
+
             var editModel = new TodoEditViewModel
             {
                 Id = todo.Id,
                 Title = todo.Title,
-                Description = todo.Description
+                Tag = todo.Tag,
+                Description = todo.Description,
+                TagList = new SelectList(todoTags)
             };
 
             return editModel;
