@@ -1,13 +1,16 @@
 ﻿using System.Threading.Tasks;
+using Todo.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 
-namespace Todo.Authorization
+namespace Todo.Authorization.Contacts
 {
-    public class ManagerAuthorizationHandler : AuthorizationHandler<OperationAuthorizationRequirement, Models.Todo>
+    public class ManagerAuthorizationHandler : AuthorizationHandler<OperationAuthorizationRequirement, Contact>
     {
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
-            OperationAuthorizationRequirement requirement, Models.Todo resource)
+        protected override Task
+            HandleRequirementAsync(AuthorizationHandlerContext context,
+                                   OperationAuthorizationRequirement requirement,
+                                   Contact resource)
         {
             if (context.User == null || resource == null)
             {
@@ -15,8 +18,8 @@ namespace Todo.Authorization
             }
 
             // If not asking for approval/reject, return.
-            if (requirement.Name != Constants.Start &&
-                requirement.Name != Constants.Finish)
+            if (requirement.Name != Constants.Approve &&
+                requirement.Name != Constants.Reject)
             {
                 return Task.FromResult(0);
             }

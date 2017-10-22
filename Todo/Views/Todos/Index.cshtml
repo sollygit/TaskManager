@@ -6,77 +6,92 @@
 
 <h2>Todo List</h2>
 
-<form asp-controller="Todos" asp-action="Index" method="get">
-    <div class="form-group row">
-        <div class="col-md-2">
-            <a asp-action="Create">Create New</a>
-        </div>
-        <div class="col-md-2">
-            <div class="input-group">
-                <span class="input-group-addon"></span>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<div class="container-fluid">
+    <form asp-controller="Todos" asp-action="Index" method="get">
+        <div class="form-group">
+            <div class="col-md-2 col-sm-2 col-xs-4">
                 @Html.DropDownListFor(x => x.TagId, new SelectList(Model.TagList, "Id", "Name"), "-- All Tags --", new { @class = "form-control" })
             </div>
-        </div>
-        <div class="col-md-2">
-            <div class="input-group">
-                <span class="input-group-addon"></span>
+            <div class="col-md-3 col-sm-3 col-xs-4">
                 <input type="text" name="searchString" placeholder="Search items" class="form-control" />
             </div>
+            <div class="col-md-7 col-sm-7 col-xs-4">
+                <input type="submit" value="Search" class="btn btn-success" />
+            </div>
         </div>
-        <div class="col-md-6">
-            <input type="submit" value="Search" class="btn btn-success" />
+    </form>
+</div>
+
+<p></p>
+
+@if (!Model.TodoList.Any())
+{
+    <div class="container-fluid">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <h5 class="text-muted">No items found.</h5>
         </div>
     </div>
-</form>
+}
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.TodoList.FirstOrDefault().Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TodoList.FirstOrDefault().TagId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TodoList.FirstOrDefault().Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TodoList.FirstOrDefault().StartDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TodoList.FirstOrDefault().Status)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.TodoList)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Model.TagList.Where(t => t.Id == item.TagId).FirstOrDefault().Name
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StartDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                    <text> | </text>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                    <text> | </text>
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+@if (Model.TodoList.Any())
+{
+    <div class="container-fluid">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.TodoList.FirstOrDefault().Title)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.TodoList.FirstOrDefault().TagId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.TodoList.FirstOrDefault().Description)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.TodoList.FirstOrDefault().StartDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.TodoList.FirstOrDefault().Status)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.TodoList)
+                {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Model.TagList.Where(t => t.Id == item.TagId).FirstOrDefault().Name
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                        <text> | </text>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                        <text> | </text>
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

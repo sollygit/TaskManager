@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Todo.Models;
+using Todo.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System;
 
@@ -28,12 +29,13 @@ namespace Todo.Data
             if (!_ctx.Users.Any())
             {
                 var adminId = await EnsureUser(username, password);
-                await EnsureRole(adminId, Authorization.Constants.ContactAdministratorsRole);
+                await EnsureRole(adminId, Constants.ContactAdministratorsRole);
 
                 var managerId = await EnsureUser("james@dotnetcore.com", password);
-                await EnsureRole(managerId, Authorization.Constants.ContactManagersRole);
+                await EnsureRole(managerId, Constants.ContactManagersRole);
 
-                SeedDB(adminId);
+                SeedTodo(managerId, adminId);
+                SeedContacts(managerId);
             }
         }
 
@@ -72,14 +74,14 @@ namespace Todo.Data
             return result;
         }
 
-        public void SeedDB(string userId)
+        public void SeedTodo(string managerId, string adminId)
         {
-            if (_ctx.TodoList.Any())
+            if (_ctx.Todo.Any())
             {
-                return;  // DB has been seeded
+                return;  // Todo has been seeded
             }
 
-            _ctx.TagList.AddRange(
+            _ctx.Tag.AddRange(
                 new Tag { Name = "Personal" },
                 new Tag { Name = "Business" },
                 new Tag { Name = "Social" },
@@ -87,13 +89,24 @@ namespace Todo.Data
                 new Tag { Name = "Code" }
             );
 
-            _ctx.TodoList.AddRange(
+            _ctx.Todo.AddRange(
                 new Models.Todo
                 {
                     Title = "Gym Time!",
                     Description = "Hit the Gym at least twice a week",
                     Status = TodoStatus.New,
-                    OwnerID = userId,
+                    OwnerID = managerId,
+                    StartDate = DateTime.Now,
+                    TagId = 1,
+                });
+
+            _ctx.Todo.AddRange(
+                new Models.Todo
+                {
+                    Title = "Gym Time!",
+                    Description = "Hit the Gym at least twice a week",
+                    Status = TodoStatus.New,
+                    OwnerID = adminId,
                     StartDate = DateTime.Now,
                     TagId = 1,
                 },
@@ -102,7 +115,7 @@ namespace Todo.Data
                  Title = "Get new business cards",
                  Description = "By January get your new business cards",
                  Status = TodoStatus.New,
-                 OwnerID = userId,
+                 OwnerID = adminId,
                  StartDate = DateTime.Now,
                  TagId = 2,
              },
@@ -111,7 +124,7 @@ namespace Todo.Data
                  Title = "Copyright information",
                  Description = "Add copyright information to footer",
                  Status = TodoStatus.New,
-                 OwnerID = userId,
+                 OwnerID = adminId,
                  StartDate = DateTime.Now,
                  TagId = 2,
              },
@@ -120,7 +133,7 @@ namespace Todo.Data
                  Title = "Instagram",
                  Description = "Create your Instagram landing page",
                  Status = TodoStatus.New,
-                 OwnerID = userId,
+                 OwnerID = adminId,
                  StartDate = DateTime.Now,
                  TagId = 3,
              },
@@ -129,10 +142,69 @@ namespace Todo.Data
                 Title = "Go to the Park",
                 Description = "Go to the Park. You can take your dog or a pink Armadillo",
                 Status = TodoStatus.New,
-                OwnerID = userId,
+                OwnerID = adminId,
                 StartDate = DateTime.Now,
                 TagId = 4,
             });
+
+            _ctx.SaveChanges();
+        }
+
+        public void SeedContacts(string userId)
+        {
+            if (_ctx.Contact.Any())
+            {
+                return;  // Contacts has been seeded
+            }
+
+            _ctx.Contact.AddRange(
+                new Contact
+                {
+                    Name = "Debra Garcia",
+                    Address = "1234 Main St",
+                    City = "Redmond",
+                    State = "WA",
+                    Zip = "10999",
+                    Email = "debra@example.com",
+                    Status = ContactStatus.Approved,
+                    OwnerID = userId
+                },
+             new Contact
+             {
+                 Name = "Thorsten Weinrich",
+                 Address = "5678 1st Ave W",
+                 City = "Redmond",
+                 State = "WA",
+                 Zip = "10999",
+                 Email = "thorsten@example.com"
+             },
+             new Contact
+             {
+                 Name = "Yuhong Li",
+                 Address = "9012 State st",
+                 City = "Redmond",
+                 State = "WA",
+                 Zip = "10999",
+                 Email = "yuhong@example.com"
+             },
+             new Contact
+             {
+                 Name = "Jon Orton",
+                 Address = "3456 Maple St",
+                 City = "Redmond",
+                 State = "WA",
+                 Zip = "10999",
+                 Email = "jon@example.com"
+             },
+             new Contact
+             {
+                 Name = "Diliana Alexieva-Bosseva",
+                 Address = "7890 2nd Ave E",
+                 City = "Redmond",
+                 State = "WA",
+                 Zip = "10999",
+                 Email = "diliana@example.com"
+             });
 
             _ctx.SaveChanges();
         }

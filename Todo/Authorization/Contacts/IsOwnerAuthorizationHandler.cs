@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 
-namespace Todo.Authorization
+namespace Todo.Authorization.Contacts
 {
-    public class IsOwnerAuthorizationHandler: AuthorizationHandler<OperationAuthorizationRequirement, Models.Todo>
+    public class IsOwnerAuthorizationHandler : AuthorizationHandler<OperationAuthorizationRequirement, Contact>
     {
         UserManager<ApplicationUser> _userManager;
 
@@ -15,9 +15,10 @@ namespace Todo.Authorization
             _userManager = userManager;
         }
 
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, 
-            OperationAuthorizationRequirement requirement,
-            Models.Todo resource)
+        protected override Task
+            HandleRequirementAsync(AuthorizationHandlerContext context,
+                                   OperationAuthorizationRequirement requirement,
+                                   Contact resource)
         {
             if (context.User == null || resource == null)
             {
@@ -25,6 +26,7 @@ namespace Todo.Authorization
             }
 
             // If we're not asking for CRUD permission, return.
+
             if (requirement.Name != Constants.Create &&
                 requirement.Name != Constants.Read &&
                 requirement.Name != Constants.Update &&

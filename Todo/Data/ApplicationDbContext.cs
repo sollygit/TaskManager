@@ -6,8 +6,9 @@ namespace Todo.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public DbSet<Models.Todo> TodoList { get; set; }
-        public DbSet<Models.Tag> TagList { get; set; }
+        public DbSet<Models.Todo> Todo { get; set; }
+        public DbSet<Models.Tag> Tag { get; set; }
+        public DbSet<Contact> Contact { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {

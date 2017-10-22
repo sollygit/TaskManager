@@ -1,13 +1,16 @@
 ﻿using System.Threading.Tasks;
+using Todo.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 
-namespace Todo.Authorization
+namespace Todo.Authorization.Contacts
 {
-    public class AdministratorsAuthorizationHandler : AuthorizationHandler<OperationAuthorizationRequirement, Models.Todo>
+    public class AdministratorsAuthorizationHandler : AuthorizationHandler<OperationAuthorizationRequirement, Contact>
     {
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
-            OperationAuthorizationRequirement requirement, Models.Todo resource)
+        protected override Task HandleRequirementAsync(
+            AuthorizationHandlerContext context,
+            OperationAuthorizationRequirement requirement,
+            Contact resource)
         {
             if (context.User == null)
             {

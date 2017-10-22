@@ -11,7 +11,6 @@ using Todo.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
-using Todo.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -77,10 +76,15 @@ namespace Todo
                 config.Filters.Add(new AuthorizeFilter(policy));
             });
 
-            // Authorization handlers.
-            services.AddScoped<IAuthorizationHandler,IsOwnerAuthorizationHandler>();
-            services.AddSingleton<IAuthorizationHandler,AdministratorsAuthorizationHandler>();
-            services.AddSingleton<IAuthorizationHandler,ManagerAuthorizationHandler>();
+            // Todo Authorization handlers.
+            services.AddScoped<IAuthorizationHandler, Authorization.Todos.IsOwnerAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, Authorization.Todos.AdministratorsAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, Authorization.Todos.ManagerAuthorizationHandler>();
+
+            // Contact Authorization handlers.
+            services.AddScoped<IAuthorizationHandler, Authorization.Contacts.IsOwnerAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, Authorization.Contacts.AdministratorsAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, Authorization.Contacts.ManagerAuthorizationHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

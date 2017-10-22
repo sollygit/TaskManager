@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization.Infrastructure;
 
-namespace Todo.Authorization
+namespace Todo.Authorization.Todos
 {
     public static class TodoOperations
     {
@@ -10,18 +10,5 @@ namespace Todo.Authorization
         public static OperationAuthorizationRequirement Delete = new OperationAuthorizationRequirement { Name = Constants.Delete };
         public static OperationAuthorizationRequirement Start = new OperationAuthorizationRequirement { Name = Constants.Start };
         public static OperationAuthorizationRequirement Finish = new OperationAuthorizationRequirement { Name = Constants.Finish };
-    }
-
-    public class Constants
-    {
-        public static readonly string Create = "Create";
-        public static readonly string Read = "Read";
-        public static readonly string Update = "Update";
-        public static readonly string Delete = "Delete";
-        public static readonly string Start = "Start";
-        public static readonly string Finish = "Finish";
-
-        public static readonly string ContactAdministratorsRole = "ContactAdministrators";
-        public static readonly string ContactManagersRole = "ContactManagers";
     }
 }
