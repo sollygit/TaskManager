@@ -1,4 +1,4 @@
-# TodoList - How to build/run this data sample
+# TaskManager - How to build/run this data sample
 
 Set password with the Secret Manager tool:
 dotnet user-secrets set SeedUserPW <pw>
