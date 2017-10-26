@@ -26,7 +26,7 @@ namespace TaskManager.Controllers
         // GET: Todos
         public async Task<IActionResult> Index(int tagId, string searchString)
         {
-            var todos = from t in _context.Todo select t;
+            var todos = from t in _context.Todos select t;
             var currentUserId = _userManager.GetUserId(User);
 
             todos = todos.Where(c => c.OwnerID == currentUserId);
@@ -41,7 +41,7 @@ namespace TaskManager.Controllers
                 todos = todos.Where(x => x.TagId == tagId);
             }
 
-            var tagList = _context.Tag.ToList();
+            var tagList = _context.Tags.ToList();
 
             var todoTagVM = new TodoTagViewModel
             {
@@ -60,7 +60,7 @@ namespace TaskManager.Controllers
                 return NotFound();
             }
 
-            var todo = await _context.Todo.SingleOrDefaultAsync(m => m.Id == id);
+            var todo = await _context.Todos.SingleOrDefaultAsync(m => m.Id == id);
             if (todo == null)
             {
                 return NotFound();
@@ -74,7 +74,7 @@ namespace TaskManager.Controllers
         {
             var todoEditVM = new TodoEditViewModel
             {
-                TagList = _context.Tag
+                TagList = _context.Tags
             };
 
             return View(todoEditVM);
@@ -90,7 +90,7 @@ namespace TaskManager.Controllers
                 return View(editModel);
             }
 
-            var todo = ViewModel_to_model(new Models.Todo(), editModel);
+            var todo = ViewModel_to_model(new Todo(), editModel);
 
             todo.OwnerID = _userManager.GetUserId(User);
 
@@ -107,7 +107,7 @@ namespace TaskManager.Controllers
                 return NotFound();
             }
 
-            var todo = await _context.Todo.SingleOrDefaultAsync(m => m.Id == id);
+            var todo = await _context.Todos.SingleOrDefaultAsync(m => m.Id == id);
             if (todo == null)
             {
                 return NotFound();
@@ -129,7 +129,7 @@ namespace TaskManager.Controllers
             }
 
             // Fetch Contact from DB to get OwnerID.
-            var todo = await _context.Todo.SingleOrDefaultAsync(m => m.Id == id);
+            var todo = await _context.Todos.SingleOrDefaultAsync(m => m.Id == id);
             if (todo == null)
             {
                 return NotFound();
@@ -151,7 +151,7 @@ namespace TaskManager.Controllers
                 return NotFound();
             }
 
-            var todo = await _context.Todo.SingleOrDefaultAsync(m => m.Id == id);
+            var todo = await _context.Todos.SingleOrDefaultAsync(m => m.Id == id);
             if (todo == null)
             {
                 return NotFound();
@@ -165,9 +165,9 @@ namespace TaskManager.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var todo = await _context.Todo.SingleOrDefaultAsync(m => m.Id == id);
+            var todo = await _context.Todos.SingleOrDefaultAsync(m => m.Id == id);
 
-            _context.Todo.Remove(todo);
+            _context.Todos.Remove(todo);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
@@ -176,10 +176,10 @@ namespace TaskManager.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SetStatus(int id, TodoStatus status)
         {
-            var todo = await _context.Todo.SingleOrDefaultAsync(m => m.Id == id);
+            var todo = await _context.Todos.SingleOrDefaultAsync(m => m.Id == id);
 
             todo.Status = status;
-            _context.Todo.Update(todo);
+            _context.Todos.Update(todo);
 
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
@@ -187,21 +187,21 @@ namespace TaskManager.Controllers
 
         private bool TodoExists(int id)
         {
-            return _context.Todo.Any(e => e.Id == id);
+            return _context.Todos.Any(e => e.Id == id);
         }
 
-        private Models.Todo ViewModel_to_model(Models.Todo todo, TodoEditViewModel editModel)
+        private Todo ViewModel_to_model(Todo todo, TodoEditViewModel editModel)
         {
             todo.Id = editModel.Id;
             todo.Title = editModel.Title;
             todo.TagId = editModel.TagId;
             todo.Description = editModel.Description;
-            todo.StartDate = editModel.Date;
+            todo.StartDate = editModel.Date == DateTime.MinValue ? DateTime.Now : editModel.Date;
 
             return todo;
         }
 
-        private TodoEditViewModel Model_to_viewModelAsync(Models.Todo todo)
+        private TodoEditViewModel Model_to_viewModelAsync(Todo todo)
         {
             var editModel = new TodoEditViewModel
             {
@@ -210,7 +210,7 @@ namespace TaskManager.Controllers
                 TagId = todo.TagId,
                 Description = todo.Description,
                 Date = todo.StartDate,
-                TagList = _context.Tag
+                TagList = _context.Tags
             };
 
             return editModel;
@@ -218,7 +218,7 @@ namespace TaskManager.Controllers
 
         public string GetTagName(int id)
         {
-            return _context.Tag.Where(t => t.Id == id).FirstOrDefault().Name;
+            return _context.Tags.Where(t => t.Id == id).FirstOrDefault().Name;
         }
     }
 }

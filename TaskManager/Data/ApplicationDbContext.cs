@@ -6,9 +6,9 @@ namespace TaskManager.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public DbSet<Todo> Todo { get; set; }
-        public DbSet<Tag> Tag { get; set; }
-        public DbSet<Contact> Contact { get; set; }
+        public DbSet<Todo> Todos { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+        public DbSet<Contact> Contacts { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {

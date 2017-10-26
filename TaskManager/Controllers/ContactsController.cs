@@ -29,7 +29,7 @@ namespace TaskManager.Controllers
         // GET: Contacts
         public async Task<IActionResult> Index()
         {
-            var contacts = from c in _context.Contact
+            var contacts = from c in _context.Contacts
                            select c;
 
             var isAuthorized = User.IsInRole(Constants.ContactManagersRole) ||
@@ -55,7 +55,7 @@ namespace TaskManager.Controllers
                 return NotFound();
             }
 
-            var contact = await _context.Contact.SingleOrDefaultAsync(m => m.ContactId == id);
+            var contact = await _context.Contacts.SingleOrDefaultAsync(m => m.ContactId == id);
             if (contact == null)
             {
                 return NotFound();
@@ -129,7 +129,7 @@ namespace TaskManager.Controllers
                 return NotFound();
             }
 
-            var contact = await _context.Contact.SingleOrDefaultAsync(
+            var contact = await _context.Contacts.SingleOrDefaultAsync(
                                                         m => m.ContactId == id);
             if (contact == null)
             {
@@ -160,7 +160,7 @@ namespace TaskManager.Controllers
             }
 
             // Fetch Contact from DB to get OwnerID.
-            var contact = await _context.Contact.SingleOrDefaultAsync(m => m.ContactId == id);
+            var contact = await _context.Contacts.SingleOrDefaultAsync(m => m.ContactId == id);
             if (contact == null)
             {
                 return NotFound();
@@ -201,7 +201,7 @@ namespace TaskManager.Controllers
                 return NotFound();
             }
 
-            var contact = await _context.Contact.SingleOrDefaultAsync(m => m.ContactId == id);
+            var contact = await _context.Contacts.SingleOrDefaultAsync(m => m.ContactId == id);
             if (contact == null)
             {
                 return NotFound();
@@ -222,7 +222,7 @@ namespace TaskManager.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var contact = await _context.Contact.SingleOrDefaultAsync(m => m.ContactId == id);
+            var contact = await _context.Contacts.SingleOrDefaultAsync(m => m.ContactId == id);
 
             var isAuthorized = await _authorizationService.AuthorizeAsync(User, contact,
                                         ContactOperations.Delete);
@@ -231,7 +231,7 @@ namespace TaskManager.Controllers
                 return new ChallengeResult();
             }
 
-            _context.Contact.Remove(contact);
+            _context.Contacts.Remove(contact);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
@@ -242,7 +242,7 @@ namespace TaskManager.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SetStatus(int id, ContactStatus status)
         {
-            var contact = await _context.Contact.SingleOrDefaultAsync(m => m.ContactId == id);
+            var contact = await _context.Contacts.SingleOrDefaultAsync(m => m.ContactId == id);
 
             var contactOperation = (status == ContactStatus.Approved) ? ContactOperations.Approve
                                                                       : ContactOperations.Reject;
@@ -254,7 +254,7 @@ namespace TaskManager.Controllers
                 return new ChallengeResult();
             }
             contact.Status = status;
-            _context.Contact.Update(contact);
+            _context.Contacts.Update(contact);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
@@ -262,7 +262,7 @@ namespace TaskManager.Controllers
 
         private bool ContactExists(int id)
         {
-            return _context.Contact.Any(e => e.ContactId == id);
+            return _context.Contacts.Any(e => e.ContactId == id);
         }
 
         private Contact ViewModel_to_model(Contact contact, ContactEditViewModel editModel)

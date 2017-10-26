@@ -76,12 +76,12 @@ namespace TaskManager.Data
 
         public void SeedTodo(string managerId, string adminId)
         {
-            if (_ctx.Todo.Any())
+            if (_ctx.Todos.Any())
             {
                 return;  // Todo has been seeded
             }
 
-            _ctx.Tag.AddRange(
+            _ctx.Tags.AddRange(
                 new Tag { Name = "Personal" },
                 new Tag { Name = "Business" },
                 new Tag { Name = "Social" },
@@ -89,7 +89,7 @@ namespace TaskManager.Data
                 new Tag { Name = "Code" }
             );
 
-            _ctx.Todo.AddRange(
+            _ctx.Todos.AddRange(
                 new Models.Todo
                 {
                     Title = "Gym Time!",
@@ -100,7 +100,7 @@ namespace TaskManager.Data
                     TagId = 1,
                 });
 
-            _ctx.Todo.AddRange(
+            _ctx.Todos.AddRange(
                 new Models.Todo
                 {
                     Title = "Gym Time!",
@@ -152,12 +152,12 @@ namespace TaskManager.Data
 
         public void SeedContacts(string userId)
         {
-            if (_ctx.Contact.Any())
+            if (_ctx.Contacts.Any())
             {
                 return;  // Contacts has been seeded
             }
 
-            _ctx.Contact.AddRange(
+            _ctx.Contacts.AddRange(
                 new Contact
                 {
                     Name = "Debra Garcia",
