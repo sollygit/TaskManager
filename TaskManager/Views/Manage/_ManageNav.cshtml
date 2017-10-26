@@ -1,4 +1,4 @@
-﻿@using Todo.Views.Manage
+﻿@using TaskManager.Views.Manage
 @inject SignInManager<ApplicationUser> SignInManager
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
