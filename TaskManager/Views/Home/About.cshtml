@@ -1,13 +1,61 @@
-﻿@{
+﻿<!--
+                  ,--.    ,--.
+                 ((O ))--((O ))
+               ,'_`--'____`--'_`.
+              _:  ____________  :_
+             | | ||::::::::::|| | |
+             | | ||::::::::::|| | |
+             | | ||::::::::::|| | |
+             |_| |/__________\| |_|
+               |________________|
+            __..-'            `-..__
+         .-| : .----------------. : |-.
+       ,\ || | |\______________/| | || /.
+      /`.\:| | ||  __  __  __  || | |;/,'\
+     :`-._\;.| || '--''--''--' || |,:/_.-':
+     |    :  | || .----------. || |  :    |
+     |    |  | || '----SSt---' || |  |    |
+     |    |  | ||   _   _   _  || |  |    |
+     :,--.;  | ||  (_) (_) (_) || |  :,--.;
+     (`-'|)  | ||______________|| |  (|`-')
+      `--'   | |/______________\| |   `--'
+             |____________________|
+              `.________________,'
+               (_______)(_______)
+               (_______)(_______)
+               (_______)(_______)
+               (_______)(_______)
+              |        ||        |
+              '--------''--------'
+-->
+
+<link href="~/css/about.css" rel="stylesheet" />
+
+<script type="text/javascript">
+    setTimeout(function () {
+        document.querySelector('footer').style = 'display: none';
+    }, 200);
+</script>
+
+@{
     ViewData["Title"] = "About";
 }
-<h2>@ViewData["Title"]</h2>
-<h3>@ViewData["Message"]</h3>
 
-<img src="~/images/solly.png" />
-
-<p><br />
-    Hello, my name is Solly Fathi and I have been working as a software developer for a while. 
-    <br />
-    Currently, I'm an independent code monkey on Windows Azure platform and having a blast doing that!
-</p>
+<div id="holder">
+    <div id="grid3" class="grid">
+        <div class="content"><img alt="" src="~/images/solly.png"></div>
+        <div class="content"><img alt="" src="~/images/banner1.svg"></div>
+    </div>
+    <div id="grid2" class="grid">
+        <div class="content"><p>About me...</p></div>
+        <div class="content"><p>I kinda get nervous when I take tests.</p></div>
+        <div class="content"><p>Sweet as.</p></div>
+        <div class="content"><p>I already had an I.Q. test this year... but I don't think I ever had a...</p></div>
+    </div>
+    <div id="grid1" class="grid">
+        <div class="content"><h1>To-do List.<br>Enjoy!</h1></div>
+        <div class="content"><p>Kia Ora</p></div>
+        <div class="content"><p>Reaction time is a factor in this so please pay attention. Answer as quickly as you can.</p></div>
+        <div class="content"><p>Start creating your tasks...</p></div>
+    </div>
+</div>
