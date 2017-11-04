@@ -22,17 +22,17 @@ namespace TaskManager.Data
             _roleManager = roleManager;
         }
 
-        public async Task SeedAsync(string username, string password)
+        public async Task SeedAsync(string password)
         {
             _ctx.Database.EnsureCreated();
 
             if (!_ctx.Users.Any())
             {
-                var adminId = await EnsureUser(username, password);
-                await EnsureRole(adminId, Constants.ContactAdministratorsRole);
+                var adminId = await EnsureUser("admin@gmail.com", password);
+                await EnsureRole(adminId, Constants.AdministratorsRole);
 
-                var managerId = await EnsureUser("james@dotnetcore.com", password);
-                await EnsureRole(managerId, Constants.ContactManagersRole);
+                var managerId = await EnsureUser("manager@gmail.com", password);
+                await EnsureRole(managerId, Constants.ManagersRole);
 
                 SeedTodo(managerId, adminId);
                 SeedContacts(managerId);

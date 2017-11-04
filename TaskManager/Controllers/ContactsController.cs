@@ -32,8 +32,8 @@ namespace TaskManager.Controllers
             var contacts = from c in _context.Contacts
                            select c;
 
-            var isAuthorized = User.IsInRole(Constants.ContactManagersRole) ||
-                               User.IsInRole(Constants.ContactAdministratorsRole);
+            var isAuthorized = User.IsInRole(Constants.ManagersRole) ||
+                               User.IsInRole(Constants.AdministratorsRole);
 
             var currentUserId = _userManager.GetUserId(User);
 

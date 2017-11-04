@@ -108,7 +108,6 @@ namespace TaskManager
 
             // dotnet user-secrets set SeedUserPW <pw>
             var testUserPw = Configuration["SeedUserPW"];
-            var mail = Configuration["Email"];
 
             if (String.IsNullOrEmpty(testUserPw))
             {
@@ -116,7 +115,7 @@ namespace TaskManager
                     "dotnet user-secrets set SeedUserPW <pw>");
             }
 
-            seeder.SeedAsync(mail, testUserPw).Wait();
+            seeder.SeedAsync(testUserPw).Wait();
         }
     }
 }

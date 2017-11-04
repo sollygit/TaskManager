@@ -11,7 +11,7 @@
         public static readonly string Start = "Start";
         public static readonly string Finish = "Finish";
 
-        public static readonly string ContactAdministratorsRole = "ContactAdministrators";
-        public static readonly string ContactManagersRole = "ContactManagers";
+        public static readonly string AdministratorsRole = "Administrators";
+        public static readonly string ManagersRole = "Managers";
     }
 }

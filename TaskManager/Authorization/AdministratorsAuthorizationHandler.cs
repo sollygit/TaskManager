@@ -18,7 +18,7 @@ namespace TaskManager.Authorization
             }
 
             // Administrators can do anything.
-            if (context.User.IsInRole(Constants.ContactAdministratorsRole))
+            if (context.User.IsInRole(Constants.AdministratorsRole))
             {
                 context.Succeed(requirement);
             }
