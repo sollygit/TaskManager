@@ -17,14 +17,14 @@ namespace TaskManager.Controllers
         {
             ViewData["Message"] = "A simple TODO list example with user authentication in .NET core 2.0";
 
-            return View();
+            return View("About");
         }
 
         public IActionResult Contact()
         {
             ViewData["Message"] = "Solly's contact page.";
 
-            return View();
+            return View("Contact");
         }
 
         public IActionResult Error()
