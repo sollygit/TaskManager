@@ -1,4 +1,4 @@
-# TaskManager - MVC Style App with Authentication and SQL DB
+# MVC Task Manager App with AspNetCore.Identity
 
 How to build/run this data sample:
 
