@@ -1,4 +1,6 @@
-# TaskManager - How to build/run this data sample
+# TaskManager - MVC Style App with Authentication and SQL DB
+
+How to build/run this data sample:
 
 Set password with the Secret Manager tool:
 dotnet user-secrets set SeedUserPW <pw>
